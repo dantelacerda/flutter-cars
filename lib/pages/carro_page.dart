@@ -5,6 +5,7 @@ import 'package:cars/services/carro_service.dart';
 import 'package:cars/utils/alerts.dart';
 import 'package:cars/utils/nav.dart';
 import 'package:flutter/material.dart';
+import 'package:share/share.dart';
 
 class CarroPage extends StatefulWidget {
   final Carro carro;
@@ -114,7 +115,9 @@ class _CarroPageState extends State<CarroPage> {
               size: 36,
             )),
         InkWell(
-            onTap: () {},
+            onTap: () {
+              _onClickShare(context, carro);
+            },
             child: Icon(
               Icons.share,
               size: 36,
@@ -184,5 +187,9 @@ class _CarroPageState extends State<CarroPage> {
     setState(() {
       _isFavorito = !carExist;
     });
+  }
+
+  void _onClickShare(BuildContext context, carro) {
+    Share.share(carro.urlFoto);
   }
 }

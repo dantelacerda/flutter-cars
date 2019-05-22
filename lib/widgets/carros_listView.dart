@@ -5,7 +5,6 @@ import 'package:cars/utils/nav.dart';
 import 'package:flutter/material.dart';
 
 class CarrosListView extends StatelessWidget {
-
   final List<Carro> carros;
 
   const CarrosListView(this.carros);
@@ -31,7 +30,10 @@ class CarrosListView extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Center(child: Image.network(c.urlFoto ?? "http://1.bp.blogspot.com/-t6_zmIRBeL8/UjXbvBlt5bI/AAAAAAAAG8Y/6o3urfkPCFQ/s1600/irmaos+rocha.png")),
+                      Center(
+                          child: Image.network(c.urlFoto ??
+                              "http://1.bp.blogspot.com/-t6_zmIRBeL8/UjXbvBlt5bI/AAAAAAAAG8Y/6o3urfkPCFQ/s1600/irmaos+rocha.png",
+                          height: 150,)),
 
                       Text(
                         c.nome,
@@ -79,33 +81,38 @@ class CarrosListView extends StatelessWidget {
   }
 
   void _onLongClickCarro(BuildContext context, Carro c) {
-    showModalBottomSheet(context: context, builder: (context) {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Text(c.nome, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-          ),
-          ListTile(
-            leading: Icon(Icons.directions_car),
-            title: Text("Detalhes"),
-            onTap: () {
-              pop(context);
-              _onClickCarro(context, c);
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.share),
-            title: Text("Share"),
-            onTap: () {
-              pop(context);
-              _onClickShare(context, c);
-            },
-          ),
-        ],
-      );
-    });
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Text(
+                  c.nome,
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.directions_car),
+                title: Text("Detalhes"),
+                onTap: () {
+                  pop(context);
+                  _onClickCarro(context, c);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.share),
+                title: Text("Share"),
+                onTap: () {
+                  pop(context);
+                  _onClickShare(context, c);
+                },
+              ),
+            ],
+          );
+        });
   }
 
   void _onClickShare(BuildContext context, Carro c) {

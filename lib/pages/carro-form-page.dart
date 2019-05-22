@@ -1,10 +1,11 @@
+import 'dart:io';
+
 import 'package:cars/model/carro.dart';
 import 'package:cars/services/carro_service.dart';
 import 'package:cars/utils/alerts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'home_page.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CarroFormPage extends StatefulWidget {
   final Carro carro;
@@ -25,6 +26,8 @@ class _CarroFormPageState extends State<CarroFormPage> {
   int _radioIndex = 0;
 
   var _showProgress = false;
+
+  File fileCamera;
 
   get carro => widget.carro;
 
@@ -116,16 +119,16 @@ class _CarroFormPageState extends State<CarroFormPage> {
               color: Colors.blue,
               child: _showProgress
                   ? CircularProgressIndicator(
-                      valueColor:
-                          new AlwaysStoppedAnimation<Color>(Colors.white),
-                    )
+                valueColor:
+                new AlwaysStoppedAnimation<Color>(Colors.white),
+              )
                   : new Text(
-                      "Salvar",
-                      style: new TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                      ),
-                    ),
+                "Salvar",
+                style: new TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                ),
+              ),
               onPressed: () {
                 _onClickSalvar(context);
               },
@@ -137,104 +140,127 @@ class _CarroFormPageState extends State<CarroFormPage> {
   }
 
   _headerFoto() {
-    return carro != null && carro.urlFoto != null
-        ? Image.network(carro.urlFoto)
-        : Image.asset(
-            "assets/images/camera.png",
-            height: 150,
-          );
-  }
+    //Caso exista foto tirada pela camera, ele carrega essa foto
+    if (fileCamera != null) {
+      return InkWell(
+        child: Image.file(fileCamera,
+          height: 150,
+        ),
+        onTap: _onClickFoto,
+      );
+    }
 
-  _radioTipo() {
-    return Center(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          new Radio(
-            value: 0,
-            groupValue: _radioIndex,
-            onChanged: _onClickTipo,
-          ),
-          new Text(
-            "Clássicos",
-            style: TextStyle(color: Colors.blue, fontSize: 15),
-          ),
-          new Radio(
-            value: 1,
-            groupValue: _radioIndex,
-            onChanged: _onClickTipo,
-          ),
-          new Text(
-            "Esportivos",
-            style: TextStyle(color: Colors.blue, fontSize: 15),
-          ),
-          new Radio(
-            value: 2,
-            groupValue: _radioIndex,
-            onChanged: _onClickTipo,
-          ),
-          new Text(
-            "Luxo",
-            style: TextStyle(color: Colors.blue, fontSize: 15),
-          ),
-        ],
+    return InkWell(
+      child: carro != null && carro.urlFoto != null
+          ? Image.network(carro.urlFoto)
+          : Image.asset(
+        "assets/images/camera.png",
+        height: 150,
       ),
+      onTap: _onClickFoto,
     );
   }
 
-  void _onClickTipo(int value) {
-    setState(() {
-      _radioIndex = value;
-    });
-  }
+    void _onClickFoto() async {
+      fileCamera =
+      await ImagePicker.pickImage(source: ImageSource.camera); // Pega da Camera
+//    fileCamera = await ImagePicker.pickImage(source: ImageSource.gallery); // Pega da Galeria
 
-  getTipoInt(Carro carro) {
-    switch (carro.tipo) {
-      case "classicos":
-        return 0;
-      case "esportivos":
-        return 1;
-      default:
-        return 2;
-    }
-  }
+      setState(() {
 
-  String _getTipo() {
-    switch (_radioIndex) {
-      case 0:
-        return "classicos";
-      case 1:
-        return "esportivos";
-      default:
-        return "luxo";
-    }
-  }
-
-  _onClickSalvar(BuildContext context) async {
-    if (!_formKey.currentState.validate()) {
-      return;
+      });
     }
 
-    // Cria o carro
-    var c = carro ?? Carro();
-    c.nome = tNome.text;
-    c.desc = tDesc.text;
-    c.tipo = _getTipo();
-
-    setState(() {
-      _showProgress = true;
-    });
-
-    final response = await CarroService.salvar(c);
-
-    if(response.isOk()) {
-      alert(context, "Carro Salvo", response.msg);
-    } else {
-      alert(context, "Erro", response.msg);
+    _radioTipo() {
+      return Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            new Radio(
+              value: 0,
+              groupValue: _radioIndex,
+              onChanged: _onClickTipo,
+            ),
+            new Text(
+              "Clássicos",
+              style: TextStyle(color: Colors.blue, fontSize: 15),
+            ),
+            new Radio(
+              value: 1,
+              groupValue: _radioIndex,
+              onChanged: _onClickTipo,
+            ),
+            new Text(
+              "Esportivos",
+              style: TextStyle(color: Colors.blue, fontSize: 15),
+            ),
+            new Radio(
+              value: 2,
+              groupValue: _radioIndex,
+              onChanged: _onClickTipo,
+            ),
+            new Text(
+              "Luxo",
+              style: TextStyle(color: Colors.blue, fontSize: 15),
+            ),
+          ],
+        ),
+      );
     }
 
-    setState(() {
-      _showProgress = false;
-    });
+    void _onClickTipo(int value) {
+      setState(() {
+        _radioIndex = value;
+      });
+    }
+
+    getTipoInt(Carro carro) {
+      switch (carro.tipo) {
+        case "classicos":
+          return 0;
+        case "esportivos":
+          return 1;
+        default:
+          return 2;
+      }
+    }
+
+    String _getTipo() {
+      switch (_radioIndex) {
+        case 0:
+          return "classicos";
+        case 1:
+          return "esportivos";
+        default:
+          return "luxo";
+      }
+    }
+
+    _onClickSalvar(BuildContext context) async {
+      if (!_formKey.currentState.validate()) {
+        return;
+      }
+
+      // Cria o carro
+      var c = carro ?? Carro();
+      c.nome = tNome.text;
+      c.desc = tDesc.text;
+      c.tipo = _getTipo();
+
+      setState(() {
+        _showProgress = true;
+      });
+
+      final response = await CarroService.salvar(c, fileCamera);
+
+      if (response.isOk()) {
+        alert(context, "Carro Salvo", response.msg);
+      } else {
+        alert(context, "Erro", response.msg);
+      }
+
+      setState(() {
+        _showProgress = false;
+      });
+    }
   }
-}
