@@ -37,6 +37,20 @@ class Carro {
     );
   }
 
+  Map toMap() {
+    Map<String, dynamic> map = {
+      "nome": nome,
+      "tipo": tipo,
+      "desc": desc,
+      "urlFoto": urlFoto,
+    };
+
+    if(id != null) {
+      map["id"] = id;
+    }
+    return map;
+  }
+
   @override
   String toString() {
     return "Carro[$id]: $nome";

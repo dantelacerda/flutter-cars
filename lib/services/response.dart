@@ -1,10 +1,10 @@
-class LoginResponse {
+class Response {
   final String status;
   final String msg;
 
-  LoginResponse(this.status, this.msg);
+  Response(this.status, this.msg);
 
-  LoginResponse.fromJson(Map<String, dynamic> map):
+  Response.fromJson(Map<String, dynamic> map):
       status = map["status"],
       msg = map["msg"];
 
