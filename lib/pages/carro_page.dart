@@ -1,11 +1,13 @@
 import 'package:cars/db/carro_db.dart';
 import 'package:cars/model/carro.dart';
 import 'package:cars/pages/carro-form-page.dart';
+import 'package:cars/pages/video_page.dart';
 import 'package:cars/services/carro_service.dart';
 import 'package:cars/utils/alerts.dart';
 import 'package:cars/utils/nav.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CarroPage extends StatefulWidget {
   final Carro carro;
@@ -26,9 +28,11 @@ class _CarroPageState extends State<CarroPage> {
     super.initState();
 
     CarroDB.getInstance().exists(carro).then((exist) {
-      setState(() {
-        _isFavorito = exist;
-      });
+      if(exist) {
+        setState(() {
+          _isFavorito = exist;
+        });
+      }
     });
   }
 
@@ -47,6 +51,7 @@ class _CarroPageState extends State<CarroPage> {
           IconButton(
             icon: Icon(Icons.videocam),
             onPressed: () {
+              _onClickVideo(context);
               },
           ),
           PopupMenuButton<String>(
@@ -191,5 +196,17 @@ class _CarroPageState extends State<CarroPage> {
 
   void _onClickShare(BuildContext context, carro) {
     Share.share(carro.urlFoto);
+  }
+
+  void _onClickVideo(BuildContext context) {
+    if(carro.urlVideo != null && carro.urlVideo.isNotEmpty) {
+//      Esse LAUNCH comentado chama uma URL EXTERNA
+//      launch(carro.urlVideo);
+
+//    ESSE MÉTODO ABAIXO, EXECUTA O VÍDEO DENTRO DA APLICAÇÃO
+    push(context, VideoPage(carro));
+    } else {
+      alert(context, "Erro", "Este carro não possui nenhum vídeo");
+    }
   }
 }
