@@ -2,10 +2,11 @@ import 'package:cars/model/carro.dart';
 import 'package:cars/pages/carro-form-page.dart';
 import 'package:cars/utils/nav.dart';
 import 'package:cars/utils/prefs.dart';
-import 'package:cars/widgets/carros_listView.dart';
 import 'package:cars/widgets/carros_page.dart';
 import 'package:cars/widgets/favoritos_page.dart';
 import 'package:flutter/material.dart';
+
+import '../drawer_list.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -57,6 +58,7 @@ class _HomePageState extends State<HomePage>
           onPressed: () {
             push(context, CarroFormPage());
           }),
+      drawer: DrawerList(),
     );
   }
 }

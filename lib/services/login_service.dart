@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:cars/model/user.dart';
 import 'package:cars/utils/util.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:cars/services/response.dart';
@@ -26,6 +27,15 @@ class LoginService {
       final bodyString = response.body;
 
       final retorno = Response.fromJson(json.decode(bodyString));
+
+      if(retorno.isOk()) {
+        final user = User(
+          "Dante",
+          login,
+          "dantelacerd@gmail.com"
+        );
+        user.save();
+      }
 
       return retorno;
     } catch(error) {

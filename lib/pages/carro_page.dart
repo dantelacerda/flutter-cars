@@ -1,6 +1,7 @@
 import 'package:cars/db/carro_db.dart';
 import 'package:cars/model/carro.dart';
 import 'package:cars/pages/carro-form-page.dart';
+import 'package:cars/pages/mapa_page.dart';
 import 'package:cars/pages/video_page.dart';
 import 'package:cars/services/carro_service.dart';
 import 'package:cars/utils/alerts.dart';
@@ -45,7 +46,7 @@ class _CarroPageState extends State<CarroPage> {
           IconButton(
             icon: Icon(Icons.place),
             onPressed: () {
-
+              _onClickMapa(context);
             },
           ),
           IconButton(
@@ -207,6 +208,15 @@ class _CarroPageState extends State<CarroPage> {
     push(context, VideoPage(carro));
     } else {
       alert(context, "Erro", "Este carro não possui nenhum vídeo");
+    }
+  }
+
+  void _onClickMapa(BuildContext context) {
+
+    if(carro.latitude != null && carro.longitude != null) {
+      push(context, MapaPage(carro));
+    } else {
+      alert(context, "Erro", "Este carro não possui lat/lng");
     }
   }
 }

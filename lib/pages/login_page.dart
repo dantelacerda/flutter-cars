@@ -105,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
     final response = await LoginService.login(login, senha);
 
     if (response.isOk()) {
-        push(context, HomePage());
+        pushReplacement(context, HomePage());
     } else {
       alert(context, "Error", response.msg);
     }

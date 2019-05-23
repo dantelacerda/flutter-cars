@@ -1,3 +1,5 @@
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 class TipoCarro {
   static const String classicos = "classicos";
   static const String esportivos = "esportivos";
@@ -38,18 +40,23 @@ class Carro {
   }
 
   Map toMap() {
-    Map<String, dynamic> map = {
-      "nome": nome,
-      "tipo": tipo,
-      "desc": desc,
-      "urlFoto": urlFoto,
-    };
+      Map<String, dynamic> map = {
+        "nome": nome,
+        "tipo": tipo,
+        "desc": desc,
+        "urlFoto": urlFoto,
+      };
 
     if(id != null) {
       map["id"] = id;
     }
     return map;
   }
+
+  get latlng => LatLng(
+      latitude == null || latitude.isEmpty ? 0.0 : double.parse(latitude),
+      longitude == null || longitude.isEmpty ? 0.0 : double.parse(longitude)
+  );
 
   @override
   String toString() {
